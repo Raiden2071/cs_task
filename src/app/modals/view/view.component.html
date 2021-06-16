@@ -1,0 +1,101 @@
+<form [formGroup]="autoForm" (ngSubmit)="onSubmit()" class="m-3">
+  <form [formGroup]="ownerForm">
+    <div *ngIf="mode===0 ">
+      <div class="d-flex mb-2">
+        <div class="owner">Фамилия</div>
+        <input type="text" class="form-control" formControlName="surname" [attr.disabled]="true">
+      </div>
+      <div class="d-flex mb-2">
+        <div class="owner">Имя</div>
+        <input type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+      </div>
+      <div class="d-flex">
+        <div class="owner">Отчество</div>
+        <input type="text" class="form-control" formControlName="patronymic" [attr.disabled]="true">
+      </div>
+    </div>
+    <div *ngIf="mode!==0">
+      <div class="d-flex mb-2">
+        <div class="owner">Фамилия</div>
+        <input type="text" class="form-control" formControlName="surname">
+      </div>
+      <div class="d-flex mb-2">
+        <div class="owner">Имя</div>
+        <input type="text" class="form-control" formControlName="name">
+      </div>
+      <div class="d-flex">
+        <div class="owner">Отчество</div>
+        <input type="text" class="form-control" formControlName="patronymic">
+      </div>
+    </div>
+  </form>
+
+  <h1>Автомобили</h1>
+  <table class="table caption-top">
+    <thead>
+      <tr>
+        <th scope="col">Номер</th>
+        <th scope="col">Марка</th>
+        <th scope="col">Модель</th>
+        <th scope="col">Год</th>
+      </tr>
+    </thead>
+    <tbody formArrayName="cars">
+      <!-- view -->
+      <ng-container *ngIf="mode==0">
+        <ng-container *ngFor="let auto of owner.aCars">
+          <tr *ngFor="let a of auto.cars">
+            <td class="input-group input-group-sm">
+              <input type="text" class="form-group" [value]="a.stateNumber">
+            </td>
+            <td>
+              <input type="text" class="form-group" [value]="a.firm">
+            </td>
+            <td>
+              <input type="text" class="form-group" [value]="a.model">
+            </td>
+            <td>
+              <input type="text" class="form-group" [value]="a.productionYear">
+            </td>
+            <img src="/assets/image/delete_black.svg">
+          </tr>
+        </ng-container>
+      </ng-container>
+      <!-- edit -->
+      <ng-container *ngIf="mode==1">
+        <tr *ngFor="let car of cars.controls; let i=index" [formGroupName]="i">
+          <td class="input-group input-group-sm">
+            <input type="text" formControlName="stateNumber" class="form-group">
+          </td>
+          <td>
+            <input type="text" formControlName="firm" class="form-group">
+          </td>
+          <td>
+            <input type="text" formControlName="model" class="form-group">
+          </td>
+          <td>
+            <input type="text" formControlName="productionYear" class="form-group">
+          </td>
+          <img src="/assets/image/delete_black.svg" (click)="deleteCar(i)">
+        </tr>
+      </ng-container>
+
+    </tbody>
+  </table>
+
+  <button type="button" [disabled]="mode===0" (click)="addCar()" class="p-2 btn btn-primary">
+    <img src="/assets/image/add_white.svg">
+    <span>Добавить автомобиль</span>
+  </button>
+  <div class="d-flex mt-3">
+    <button type="submit" type="submit" class="btn btn-primary me-3">
+      <img src="/assets/image/save_white.svg">
+      <span>Сохранить</span>
+    </button>
+
+    <button type="button" (click)="close()" class="btn btn-secondary">
+      <img src="/assets/image/arrow_back_white.svg">
+      <span>Назад</span>
+    </button>
+  </div>
+</form>

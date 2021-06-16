@@ -1,0 +1,11 @@
+thead, tbody, tfoot, tr, td, th {
+  border-style: none !important;
+}
+
+table input, table th {
+  max-width: 160px;
+}
+
+.owner {
+  width: 80px;
+}
