@@ -46,7 +46,7 @@ export class ProjectComponent implements OnInit {
     const modalRef = this.modalService.open(ViewComponent, { centered: true });
     modalRef.componentInstance.mode = ModalMode.CREATE;
     modalRef.componentInstance.owner = this.owners.find(owner => owner.id == this.currentOwnerId);
-    modalRef.closed.subscribe(owner => this.owners.find(v => v.id == owner.id ? false : this.owners.push(owner)));
+    modalRef.closed.subscribe(owner => this.owners.push(owner));
   }
 
   openEdit(): void {
