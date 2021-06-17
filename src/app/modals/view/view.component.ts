@@ -14,10 +14,11 @@ import { OwnerService } from 'src/app/modules/services/owner.service';
 })
 export class ViewComponent implements OnInit {
 
-  owners!: Owner[];
   @Input() mode!: ModalMode;
   @Input() owner!: Owner;
-  autos!: Car[];
+  owners!: Owner[];
+  // autos!: Car[];
+
   autoForm!: FormGroup;
   ownerForm!: FormGroup;
 
@@ -32,25 +33,29 @@ export class ViewComponent implements OnInit {
     this.autoForm = this.fb.group({
       cars: this.fb.array([])
     });
-    if(this.mode!==2) {      
+    if(this.mode!==2 || this.owner) {      
       this.ownerForm = this.fb.group({
-        id:         [44, [Validators.minLength(1), Validators.required]],
+        id:         [this.owner.id,         [Validators.required]],
         surname:    [this.owner.surname,    [Validators.required]],
         name:       [this.owner.name,       [Validators.required]],
         patronymic: [this.owner.patronymic, [Validators.required]],
-        aCar:       [[], [Validators.required]]
+        aCars:      [this.owner.aCars,      [Validators.required]]
       });
     }
     else {
       this.ownerForm = this.fb.group({
-        id:         [44, [Validators.minLength(1), Validators.required]],
-        surname:    ['', [Validators.minLength(1), Validators.required]],
-        name:       ['', [Validators.minLength(1), Validators.required]],
-        patronymic: ['', [Validators.minLength(1), Validators.required]],
-        aCar:       [[], [Validators.required]]
+        id:         [this.randomId(), [Validators.required]],
+        surname:    ['', [Validators.required]],
+        name:       ['', [Validators.required]],
+        patronymic: ['', [Validators.required]],
+        aCars:      [[], [Validators.required]]
       });
     }
-    this.getProducts();        
+    this.getProducts();            
+  }
+
+  randomId(): number {
+    return Math.floor(Math.random() * (100 - 1) + 1)
   }
 
   get cars(): FormArray {
@@ -66,12 +71,12 @@ export class ViewComponent implements OnInit {
     })
   }
 
-  getProducts() {
+  getProducts(): void {
     this.ownerS.getAll().subscribe(val=> this.owners = val);
-    return this.autoS.getAll().subscribe(val=> this.autos = val);
+    // this.autoS.getAll().subscribe(val=> this.autos = val);
   }
 
-  addCar(): void {
+  addCar(): void {       
     this.cars.push(this.newCar());
   }
   
@@ -79,27 +84,33 @@ export class ViewComponent implements OnInit {
     this.autoS.deleteOne(id).subscribe(data => this.cars.removeAt(id));
   }
   
-  addAuto(): void {
-    this.owner.aCars.push(this.autoForm.value);
-  }
-
-  onSubmit(): void {        
-    if(this.mode===2 || this.ownerForm.valid) {      
-      this.activeModal.close(this.ownerForm.value);         
+  onSubmit(): void {                
+    if(this.mode===2) { 
+      //добавляем нового пользователя
+      if(this.owner === undefined) {
+        this.owner = this.ownerForm.value;
+        this.autoS.createOne(this.autoForm.value).subscribe(cars => this.owner.aCars.push(cars));
+        this.activeModal.close(this.owner)    
+      }
+      //добавляем авто к существующему пользователю
+      else {
+        this.autoS.createOne(this.autoForm.value).subscribe(cars => this.owner.aCars.push(cars));
+        this.activeModal.close(this.owner)    
+      }
+      return;
+    } 
+    // edit
+    if(this.mode==1) {          
+      //удалять элементы в массиве и добавлять новые 
+      this.ownerS.editOne(this.owner.id, this.ownerForm.value).subscribe((v) => console.log());
+      // this.autoS.editOne(this.owner.id, this.autoForm.value).subscribe(cars => this.owner.aCars.push(cars));
     }
-    if(this.mode==1) {
-      this.ownerS.editOne(this.owner.id, { 
-        name: this.ownerForm.value.name,
-        surname: this.ownerForm.value.surname,
-        patronymic: this.ownerForm.value.patronymic
-       }).subscribe(v => console.log(v));
-      this.autoS.createOne(this.autoForm.value).subscribe(cars => this.owner.aCars.push(cars));
-      this.activeModal.close(); 
-    }
+    // view
+    this.activeModal.close(); 
   }
 
   close(): void {
-    this.activeModal.close();
+    this.activeModal.dismiss('OK');
   } 
 
 }

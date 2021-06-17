@@ -4,15 +4,15 @@
     <img src="/assets/image/add_black.svg" class="me-1">
     <span>Добавить</span>
   </button>
-  <button (click)="openView()">
+  <button [disabled]="!currentOwnerId" (click)="openView()">
     <img src="/assets/image/remove_eye.svg" class="me-1">
     <span>Просмотр</span>
   </button>
-  <button (click)="openEdit()">
+  <button [disabled]="!currentOwnerId" (click)="openEdit()">
     <img src="/assets/image/edit_black.svg" class="me-1">
     <span>Редактировать</span>
   </button>
-  <button (click)="delete()">
+  <button [disabled]="!currentOwnerId" (click)="delete()">
     <img src="/assets/image/delete_black.svg" class="me-1">
     <span>Удалить</span>
   </button>

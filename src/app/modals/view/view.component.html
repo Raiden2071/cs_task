@@ -41,28 +41,28 @@
       </tr>
     </thead>
     <tbody formArrayName="cars">
-      <!-- view -->
-      <ng-container *ngIf="mode==0">
+      <!-- view, edit -->
+      <ng-container *ngIf="mode!==2">
         <ng-container *ngFor="let auto of owner.aCars">
           <tr *ngFor="let a of auto.cars">
             <td class="input-group input-group-sm">
-              <input type="text" class="form-group" [value]="a.stateNumber">
+              <input type="text" class="form-group" [disabled]="mode===0 ? true : false" [value]="a.stateNumber">
             </td>
             <td>
-              <input type="text" class="form-group" [value]="a.firm">
+              <input type="text" class="form-group" [disabled]="mode===0 ? true : false" [value]="a.firm">
             </td>
             <td>
-              <input type="text" class="form-group" [value]="a.model">
+              <input type="text" class="form-group" [disabled]="mode===0 ? true : false" [value]="a.model">
             </td>
             <td>
-              <input type="text" class="form-group" [value]="a.productionYear">
+              <input type="text" class="form-group" [disabled]="mode===0 ? true : false" [value]="a.productionYear">
             </td>
             <img src="/assets/image/delete_black.svg">
           </tr>
         </ng-container>
       </ng-container>
-      <!-- edit -->
-      <ng-container *ngIf="mode==1">
+      <!-- add -->
+      <ng-container *ngIf="mode==2">
         <tr *ngFor="let car of cars.controls; let i=index" [formGroupName]="i">
           <td class="input-group input-group-sm">
             <input type="text" formControlName="stateNumber" class="form-group">
