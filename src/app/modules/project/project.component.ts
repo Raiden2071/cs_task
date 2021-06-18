@@ -54,7 +54,6 @@ export class ProjectComponent implements OnInit {
     modalRef.componentInstance.owner = this.owners.find(owner => owner.id == this.currentOwnerId);
     modalRef.componentInstance.mode = ModalMode.EDIT;
     modalRef.closed.subscribe(() => this.getProducts());
-
   }
 
 }
