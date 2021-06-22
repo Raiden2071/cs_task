@@ -13,15 +13,17 @@ import { OwnerService } from '../services/owner.service';
 export class ProjectComponent implements OnInit {
 
   owners: Owner[] = [];
-  currentOwnerId!: number;
+  currentOwnerId!: number | undefined;
 
-  constructor(
+  constructor(    
     private owner: OwnerService,
     private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.getProducts();
+    console.log(this.currentOwnerId);
+
   }
 
   getProducts() {
@@ -29,9 +31,7 @@ export class ProjectComponent implements OnInit {
   }
 
   delete(): void {
-    if (this.currentOwnerId) {
-      this.owner.deleteOne(this.currentOwnerId).subscribe(data => this.owners = this.owners.filter(owner => owner.id !== this.currentOwnerId));
-    }
+      this.owner.deleteOne((this.currentOwnerId as number)).subscribe(data => this.owners = this.owners.filter(owner => owner.id !== this.currentOwnerId));
   }
 
   openView(): void {
@@ -50,10 +50,13 @@ export class ProjectComponent implements OnInit {
   }
 
   openEdit(): void {
-    const modalRef = this.modalService.open(ViewComponent, { centered: true });
-    modalRef.componentInstance.owner = this.owners.find(owner => owner.id == this.currentOwnerId);
-    modalRef.componentInstance.mode = ModalMode.EDIT;
-    modalRef.closed.subscribe(() => this.getProducts());
+    if (this.currentOwnerId) {
+      const modalRef = this.modalService.open(ViewComponent, { centered: true });
+      modalRef.componentInstance.owner = this.owners.find(owner => owner.id == this.currentOwnerId);
+      modalRef.componentInstance.mode = ModalMode.EDIT;
+      modalRef.closed.subscribe(() => this.getProducts());
+    }
   }
+
 
 }

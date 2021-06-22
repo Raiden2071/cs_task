@@ -1,6 +1,6 @@
 <h1>Владельцы автомобилей</h1>
 <div class="mb-3">
-  <button (click)="openAdd()" class="me-5">
+  <button (click)="currentOwnerId ? openEdit() : openAdd()" class="me-5">
     <img src="/assets/image/add_black.svg" class="me-1">
     <span>Добавить</span>
   </button>
@@ -28,7 +28,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let owner of owners" [class.bg]="currentOwnerId === owner.id" (click)="currentOwnerId = owner.id">
+  <tr *ngFor="let owner of owners" [class.bg]="currentOwnerId === owner.id" (click)="!currentOwnerId ? currentOwnerId = owner.id : currentOwnerId = undefined">
       <td>{{owner.name}}</td>
       <td>{{owner.surname}}</td>
       <td>{{owner.patronymic}}</td>

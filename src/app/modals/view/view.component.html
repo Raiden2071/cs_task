@@ -1,33 +1,24 @@
 <form [formGroup]="ownerForm" (ngSubmit)="onSubmit()" class="m-3">
-  <div *ngIf="mode===0 ">
+  <div>
     <div class="d-flex mb-2">
       <div class="owner">Имя</div>
-      <input type="text" class="form-control" formControlName="name" [attr.disabled]="true">
+      <input type="text" class="form-control" formControlName="name"
+        [attr.disabled]="mode==0 ? ownerForm.disabled : null"
+        [class.border-danger]="ownerForm.controls.name?.errors && showErrors">
     </div>
     <div class="d-flex mb-2">
       <div class="owner">Фамилия</div>
-      <input type="text" class="form-control" formControlName="surname" [attr.disabled]="true">
+      <input type="text" class="form-control" formControlName="surname"
+        [attr.disabled]="mode==0 ? ownerForm.disabled : null"
+        [class.border-danger]="ownerForm.controls.surname?.errors && showErrors">
     </div>
     <div class="d-flex">
       <div class="owner">Отчество</div>
-      <input type="text" class="form-control" formControlName="patronymic" [attr.disabled]="true">
+      <input type="text" class="form-control" formControlName="patronymic"
+        [attr.disabled]="mode==0 ? ownerForm.disabled : null"
+        [class.border-danger]="ownerForm.controls.patronymic?.errors && showErrors">
     </div>
   </div>
-  <div *ngIf="mode!==0">
-    <div class="d-flex mb-2">
-      <div class="owner">Имя</div>
-      <input type="text" class="form-control" formControlName="name">
-    </div>
-    <div class="d-flex mb-2">
-      <div class="owner">Фамилия</div>
-      <input type="text" class="form-control" formControlName="surname">
-    </div>
-    <div class="d-flex">
-      <div class="owner">Отчество</div>
-      <input type="text" class="form-control" formControlName="patronymic">
-    </div>
-  </div>
-
   <h1>Автомобили</h1>
   <table class="table caption-top">
     <thead>
@@ -39,43 +30,19 @@
       </tr>
     </thead>
     <tbody>
-      <!-- view, edit -->
-      <!-- need to replace ngModelOptions to formcontrol -->
-      <ng-container *ngIf="mode!==2">
-        <tr *ngFor="let auto of owner.aCars">
-          <td class="input-group input-group-sm">
-            <input type="text" [(ngModel)]="auto.stateNumber" [ngModelOptions]="{standalone: true}"
-              [disabled]="mode!==1  ? true : false">
-          </td>
-          <td>
-            <input type="text" [(ngModel)]="auto.firm" [ngModelOptions]="{standalone: true}"
-              [disabled]="mode!==1 ? true : false">
-          </td>
-          <td>
-            <input type="text" [(ngModel)]="auto.model" [ngModelOptions]="{standalone: true}"
-              [disabled]="mode!==1 ? true : false">
-          </td>
-          <td>
-            <input type="text" [(ngModel)]="auto.productionYear" [ngModelOptions]="{standalone: true}"
-              [disabled]="mode!==1 ? true : false">
-          </td>
-          <img src="/assets/image/delete_black.svg">
-        </tr>
-      </ng-container>
-
-      <ng-container formArrayName="aCars" *ngIf="mode==2">
+      <ng-container formArrayName="aCars">
         <tr *ngFor="let car of cars.controls; let i=index" [formGroupName]="i">
           <td class="input-group input-group-sm">
-            <input type="text" formControlName="stateNumber">
+            <input formControlName="stateNumber" [attr.disabled]="mode==0 ? ownerForm.disabled : null">
           </td>
           <td>
-            <input type="text" formControlName="firm">
+            <input formControlName="firm" [attr.disabled]="mode==0 ? ownerForm.disabled : null">
           </td>
           <td>
-            <input type="text" formControlName="model">
+            <input formControlName="model" [attr.disabled]="mode==0 ? ownerForm.disabled : null">
           </td>
           <td>
-            <input type="text" formControlName="productionYear">
+            <input formControlName="productionYear" [attr.disabled]="mode==0 ? ownerForm.disabled : null">
           </td>
           <img src="/assets/image/delete_black.svg" (click)="deleteCar(i)">
         </tr>
@@ -83,7 +50,7 @@
     </tbody>
   </table>
 
-  <button type="button" [disabled]="mode!==2" (click)="addCar()" class="p-2 btn btn-primary">
+  <button type="button" [disabled]="mode===0" (click)="addCar()" class="p-2 btn btn-primary">
     <img src="/assets/image/add_white.svg">
     <span>Добавить автомобиль</span>
   </button>
